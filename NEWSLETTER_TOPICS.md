@@ -3,6 +3,12 @@
 이 문서는 AI 뉴스레터 발행을 위한 글감(소재)을 관리하는 백로그입니다. 뉴스레터를 작성하면서 파생되는 새로운 아이디어나 후속 기술들은 [New Ideas / Spinoffs] 섹션에 지속적으로 추가됩니다.
 
 ## 📋 [Backlog] 작성 대기 중인 주제
+* **계층형 메모리 압축: L4 Session Archive의 요약 전략과 정보 손실 측정** `[architecture]` #memory #compression #architecture #summarization
+  > 본문에서 L4 Session Archive가 과거 작업을 압축 저장한다고 언급했지만 어떤 요약 알고리즘을 쓰고, 정보 손실이 후속 작업 성공률에 미치는 영향은 다루지 않아 후속 글로 자연스럽게 이어집니다.
+  > *(스핀오프 from: GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 | 추가: 2026-04-19)*
+* **에이전트 스킬 트리의 이식성: 환경 변경 시 결정화된 스킬의 유효성 검증 프레임워크** `[evaluation]` #skill-tree #portability #evaluation #testing
+  > 본문에서 각 인스턴스의 스킬 트리가 배포 환경에 따라 분화한다고 언급했는데, OS 또는 패키지 버전이 변경되었을 때 기존 스킬의 유효성을 자동 검증하고 재결정화하는 프레임워크 설계가 필요합니다.
+  > *(스핀오프 from: GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 | 추가: 2026-04-19)*
 * **handoff 도중의 스트리밍 응답 처리: 에이전트 전환 경계에서의 토큰 연속성** `[agent]` #agents-sdk #streaming #handoff
   > handoff 가 발생하는 순간 원래 에이전트의 스트림이 끊기고 새 에이전트의 스트림이 시작되는 구간에서 토큰 손실·중복·UI 깜박임을 막기 위한 버퍼링·시그널링 설계 패턴을 정리합니다.
   > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
@@ -27,6 +33,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리** — `2026-04-19` [https://github.com/lsdefine/GenericAgent](https://github.com/lsdefine/GenericAgent) #architecture #agent #memory #efficiency #skill-tree
 * **Project Glasswing: Mythos Preview 가 드러낸 LLM 보안 감사의 임계점** — `2026-04-19` [https://www.anthropic.com/glasswing](https://www.anthropic.com/glasswing) #frontier-model #security #zero-day #glasswing
 * **Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계** — `2026-04-19` [https://github.com/openai/openai-agents-python](https://github.com/openai/openai-agents-python) #agent #handoff #multi-agent #openai
 * **Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기** — `2026-04-19` [https://github.com/google/magika](https://github.com/google/magika) #content-detection #tooling #pipeline #classification
@@ -36,6 +43,10 @@
 * (발행이 완료된 뉴스레터 목록과 발행일자를 기록합니다)
 
 ## 💡 [New Ideas / Spinoffs] 생성된 글로부터 포착된 신규 글감
+* `[architecture]` **계층형 메모리 압축: L4 Session Archive의 요약 전략과 정보 손실 측정** ← GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 작성 중 포착
+  > 본문의 5계층 메모리 아키텍처 설명에서 L4의 구체적 압축 메커니즘이 생략되어 있음
+* `[evaluation]` **에이전트 스킬 트리의 이식성: 환경 변경 시 결정화된 스킬의 유효성 검증 프레임워크** ← GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 작성 중 포착
+  > 환경 의존적 스킬 트리의 이식성 한계가 본문에서 도입 고려사항으로 언급됨
 * `[tooling]` **Agents SDK 트레이싱을 OpenTelemetry로 내보내기: set_trace_processors 실전** ← Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 작성 중 포착
   > 원글이 SDK의 기본 트레이싱을 언급했으나 외부 관측 스택 연동의 구체 절차와 태그 매핑은 다루지 않아 후속으로 자연스럽게 이어집니다.
 * `[evaluation]` **멀티에이전트 회귀 테스트: handoff 라우팅 정확도를 측정하는 평가 셋 설계** ← Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 작성 중 포착

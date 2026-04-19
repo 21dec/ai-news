@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="380" viewBox="0 0 800 380" font-family="Inter, Arial, sans-serif">
+<rect width="800" height="380" fill="#FFFFFF" rx="12"/>
+<text x="400" y="38" text-anchor="middle" font-size="18" font-weight="700" fill="#222222">Traditional Agent vs GenericAgent</text>
+<line x1="60" y1="50" x2="740" y2="50" stroke="#EEEEEE" stroke-width="1.5"/>
+<rect x="40" y="65" width="340" height="260" fill="#EEEEEE" rx="8"/>
+<rect x="40" y="65" width="340" height="40" fill="#BBBBBB" rx="8"/>
+<rect x="40" y="85" width="340" height="20" fill="#BBBBBB"/>
+<text x="210" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#222222">Traditional Agent</text>
+<circle cx="58" cy="127" r="4" fill="#999999"/>
+<text x="70" y="131" font-size="12" fill="#222222">Context: 200K-1M tokens</text>
+<circle cx="58" cy="163" r="4" fill="#999999"/>
+<text x="70" y="167" font-size="12" fill="#222222">Full history loaded per turn</text>
+<circle cx="58" cy="199" r="4" fill="#999999"/>
+<text x="70" y="203" font-size="12" fill="#222222">No skill reuse across tasks</text>
+<circle cx="58" cy="235" r="4" fill="#999999"/>
+<text x="70" y="239" font-size="12" fill="#222222">Cost scales with complexity</text>
+<circle cx="58" cy="271" r="4" fill="#999999"/>
+<text x="70" y="275" font-size="12" fill="#222222">Hallucination from long ctx</text>
+<circle cx="400" cy="190" r="16" fill="#D75656"/>
+<text x="400" y="196" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">→</text>
+<rect x="420" y="65" width="340" height="260" fill="#EEEEEE" rx="8" stroke="#D75656" stroke-width="2"/>
+<rect x="420" y="65" width="340" height="40" fill="#D75656" rx="8"/>
+<rect x="420" y="85" width="340" height="20" fill="#D75656"/>
+<text x="590" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">GenericAgent</text>
+<circle cx="438" cy="127" r="4" fill="#D75656"/>
+<text x="450" y="131" font-size="12" fill="#222222">Context: <30K tokens</text>
+<circle cx="438" cy="163" r="4" fill="#D75656"/>
+<text x="450" y="167" font-size="12" fill="#222222">Selective L1 index routing</text>
+<circle cx="438" cy="199" r="4" fill="#D75656"/>
+<text x="450" y="203" font-size="12" fill="#222222">Crystallized skill reuse</text>
+<circle cx="438" cy="235" r="4" fill="#D75656"/>
+<text x="450" y="239" font-size="12" fill="#222222">Cost reduces over time</text>
+<circle cx="438" cy="271" r="4" fill="#D75656"/>
+<text x="450" y="275" font-size="12" fill="#222222">5-layer memory hierarchy</text>
+<text x="210" y="368" text-anchor="middle" font-size="11" fill="#999999">Traditional Approach</text>
+<text x="590" y="368" text-anchor="middle" font-size="11" fill="#D75656" font-weight="600">New Approach</text>
+</svg>
