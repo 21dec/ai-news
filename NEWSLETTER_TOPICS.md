@@ -3,6 +3,9 @@
 이 문서는 AI 뉴스레터 발행을 위한 글감(소재)을 관리하는 백로그입니다. 뉴스레터를 작성하면서 파생되는 새로운 아이디어나 후속 기술들은 [New Ideas / Spinoffs] 섹션에 지속적으로 추가됩니다.
 
 ## 📋 [Backlog] 작성 대기 중인 주제
+* **도메인별 복잡도 보정: 합성 데이터의 난이도 분포가 다운스트림 성능에 미치는 비선형 효과** `[evaluation]` #synthetic-data #complexity #evaluation #domain-specific
+  > 본문에서 수학은 높은 복잡도가 +10%를 가져오지만 법률에서는 오히려 하락한다고 언급했는데, 도메인별 최적 난이도 분포를 탐색하는 체계적 방법론이 필요합니다.
+  > *(스핀오프 from: Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크 | 추가: 2026-04-19)*
 * **계층형 메모리 압축: L4 Session Archive의 요약 전략과 정보 손실 측정** `[architecture]` #memory #compression #architecture #summarization
   > 본문에서 L4 Session Archive가 과거 작업을 압축 저장한다고 언급했지만 어떤 요약 알고리즘을 쓰고, 정보 손실이 후속 작업 성공률에 미치는 영향은 다루지 않아 후속 글로 자연스럽게 이어집니다.
   > *(스핀오프 from: GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 | 추가: 2026-04-19)*
@@ -33,6 +36,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크** — `2026-04-19` [https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/](https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/) #training #synthetic-data #mechanism-design #google
 * **GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리** — `2026-04-19` [https://github.com/lsdefine/GenericAgent](https://github.com/lsdefine/GenericAgent) #architecture #agent #memory #efficiency #skill-tree
 * **Project Glasswing: Mythos Preview 가 드러낸 LLM 보안 감사의 임계점** — `2026-04-19` [https://www.anthropic.com/glasswing](https://www.anthropic.com/glasswing) #frontier-model #security #zero-day #glasswing
 * **Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계** — `2026-04-19` [https://github.com/openai/openai-agents-python](https://github.com/openai/openai-agents-python) #agent #handoff #multi-agent #openai
@@ -43,6 +47,8 @@
 * (발행이 완료된 뉴스레터 목록과 발행일자를 기록합니다)
 
 ## 💡 [New Ideas / Spinoffs] 생성된 글로부터 포착된 신규 글감
+* `[evaluation]` **도메인별 복잡도 보정: 합성 데이터의 난이도 분포가 다운스트림 성능에 미치는 비선형 효과** ← Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크 작성 중 포착
+  > 복잡도 조정 효과의 도메인 의존성이 실무적으로 중요하지만 본문에서 정밀하게 다루지 않음
 * `[architecture]` **계층형 메모리 압축: L4 Session Archive의 요약 전략과 정보 손실 측정** ← GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 작성 중 포착
   > 본문의 5계층 메모리 아키텍처 설명에서 L4의 구체적 압축 메커니즘이 생략되어 있음
 * `[evaluation]` **에이전트 스킬 트리의 이식성: 환경 변경 시 결정화된 스킬의 유효성 검증 프레임워크** ← GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 작성 중 포착
