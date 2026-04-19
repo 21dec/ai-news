@@ -1,17 +1,18 @@
 """
-AI Newsletter Automation - Main Orchestrator
-=============================================
-실행: python main.py
+AI Newsletter Automation - Main Orchestrator (LEGACY)
+=====================================================
 
-전체 파이프라인:
-  1. 발행 이력 로드 (다양성 가드레일용)
-  2. 크롤링 (GitHub Trending + ArXiv + Reddit)
-  3. AI 선별 (Claude API - 발행 이력 참고하여 카테고리 균형 유지)
-  4. 콘텐츠 생성 (요약 + 딥다이브) + 검증 — 최대 3회 재시도
-  5. 다이어그램 생성 (SVG)
-  6. 파일 저장 (MD + HTML) + 검증 — 최대 3회 재시도
-  7. 백로그 업데이트 (Published 등록)
-  8. 스핀오프 자동 생성 (파생 주제 2~3개 → Backlog에 추가)
+⚠️  이 스크립트는 레거시 경로입니다.
+
+현재 발행 파이프라인은 Anthropic API 를 사용하지 않으며,
+주제 선별·본문 생성·스핀오프 등 LLM 작업은 Claude 스케줄 태스크
+세션이 직접 수행합니다. 운영에서 실행되는 흐름은 스케줄 태스크
+`daily-ai-newsletter` 의 프롬프트에 정의되어 있습니다.
+
+이 파일은 레거시 reference 목적으로만 유지되며, `ai/` 모듈을
+import 하는 경로(select_best_topic / generate_newsletter /
+generate_spinoffs)는 anthropic 패키지가 제거된 현재 환경에서
+호출 시 RuntimeError 로 실패합니다.
 """
 
 import sys
@@ -102,11 +103,9 @@ def run():
     print(f"   실행 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
 
-    if not ANTHROPIC_API_KEY:
-        print("\n❌ ANTHROPIC_API_KEY가 설정되지 않았습니다.")
-        print("   방법 1: .env 파일에 ANTHROPIC_API_KEY=your_key 추가")
-        print("   방법 2: export ANTHROPIC_API_KEY=your_key")
-        sys.exit(1)
+    print("\n⚠️  main.py 는 레거시 경로입니다.")
+    print("   운영 파이프라인은 Claude 스케줄 태스크 `daily-ai-newsletter` 프롬프트에서 수행됩니다.")
+    print("   이 스크립트는 `ai/` 모듈 호출 시점에 RuntimeError 로 실패합니다.\n")
 
     # ── STEP 1: 발행 이력 로드 (다양성 가드레일) ──────────────────────────
     print("\n📚 STEP 1: 발행 이력 로드 중 (다양성 가드레일)...")

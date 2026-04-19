@@ -7,8 +7,25 @@
 
 ## 프로젝트 목적
 
-AI 개발자·엔지니어 대상의 기술 뉴스레터를 **완전 자동화**하는 Python 파이프라인입니다.  
-뉴스 수집 → Claude API 선별/생성 → SVG 다이어그램 → MD/HTML 저장 → 백로그 관리까지 한 번에 처리합니다.
+AI 개발자·엔지니어 대상의 기술 뉴스레터를 **완전 자동화**하는 파이프라인입니다.
+뉴스 수집 → 주제 선별 → 본문 생성 → SVG 다이어그램 → MD/HTML 저장 → 인덱스/네비 갱신 →
+백로그 관리 → GitHub push 까지 하나의 스케줄 실행으로 처리합니다.
+
+## LLM 실행 아키텍처 (중요)
+
+이 시스템은 **Anthropic API 를 직접 호출하지 않습니다.**
+LLM 작업(주제 선별·요약 작성·본문 작성·다이어그램 스펙 결정·스핀오프 생성)은
+`daily-ai-newsletter` 스케줄 태스크가 실행되는 **Claude 세션 내부**에서 직접 수행됩니다.
+Python 코드는 결정적·비-LLM 작업만 담당합니다.
+
+- **Python 담당**: 크롤링, 파일 저장, MD→HTML 렌더링, SVG 다이어그램 생성,
+  5섹션 포맷 검증, 톤 검증, 인덱스/네비 빌드, 백로그 파일 I/O.
+- **Claude 세션 담당**: 후보 선별, 본문·요약 작성, diagram_specs 설계,
+  스핀오프 3개 추출 및 백로그 append.
+- `ai/` 디렉터리는 과거 Anthropic API 경로를 보관하는 **레거시**입니다.
+  `anthropic` 패키지는 의존성에서 제거되었으며, `ai/__init__.py` 는 ImportError 를
+  try/except 로 흡수해 스텁으로 대체합니다. 실제 호출되면 RuntimeError 로 실패합니다.
+- `main.py` 도 레거시 reference 입니다. 운영 흐름은 스케줄 태스크 프롬프트를 따릅니다.
 
 ---
 
@@ -16,14 +33,14 @@ AI 개발자·엔지니어 대상의 기술 뉴스레터를 **완전 자동화**
 
 | 파일 | 역할 | 수정 시 주의사항 |
 |------|------|----------------|
-| `main.py` | 전체 파이프라인 오케스트레이터 (STEP 1~8) | 단계 순서 변경 시 의존성 확인 |
-| `config.py` | 전역 설정 상수 | API 키는 `.env`에서 읽음, 여기에 하드코딩 금지 |
+| `main.py` | ⚠️ 레거시 참조용 — 운영에서 호출하지 않음 | 스케줄 태스크 프롬프트가 실제 오케스트레이터 |
+| `config.py` | 전역 설정 상수 | `ANTHROPIC_API_KEY` / `CLAUDE_MODEL` 은 deprecated 필드 |
 | `crawlers/github_trending.py` | GitHub AI 레포 스크래핑 | BeautifulSoup4 사용, CSS 셀렉터 변경 주의 |
 | `crawlers/arxiv.py` | ArXiv XML API 파싱 | 표준 라이브러리(urllib, xml.etree)만 사용 |
 | `crawlers/reddit.py` | Reddit JSON API | 인증 불필요, User-Agent 필수 |
-| `ai/selector.py` | 주제 선별 + 다양성 가드레일 | `published_history` 파라미터 필수 전달 |
-| `ai/generator.py` | 요약+딥다이브 생성 | `diagram_specs` JSON 형식 변경 시 diagrams 모듈도 함께 수정 |
-| `ai/spinoff.py` | 파생 주제 3개 자동 생성 | `CATEGORIES` 리스트가 `selector.py`와 공유됨 |
+| `ai/selector.py` | ⚠️ 레거시 (API 경로) | 사용하지 않음. Claude 세션이 선별 수행 |
+| `ai/generator.py` | ⚠️ 레거시 (API 경로) | 사용하지 않음. Claude 세션이 본문 작성 |
+| `ai/spinoff.py` | ⚠️ 레거시 (API 경로) | 사용하지 않음. Claude 세션이 스핀오프 작성 |
 | `diagrams/generator.py` | SVG 인포그래픽 생성 | `comparison` / `flow` 두 타입 지원 |
 | `output/writer.py` | MD + HTML 저장, `_slugify()` | HTML 은 외부 `../style.css` 참조 (인라인 `<style>` 없음) |
 | `output/index_builder.py` | `outputs/index.html` 생성 + prev/next 네비 주입 | 이슈 폴더 스캔은 `YYYY-MM-DD-slug` 정규식 기반 |
@@ -32,24 +49,34 @@ AI 개발자·엔지니어 대상의 기술 뉴스레터를 **완전 자동화**
 
 ---
 
-## 파이프라인 흐름 (main.py)
+## 파이프라인 흐름 (스케줄 태스크 `daily-ai-newsletter`)
 
 ```
-STEP 1: load_published_history()          → 다양성 가드레일용 발행 이력
-STEP 2: fetch_github_trending()           → 크롤링
-        fetch_arxiv()
-        fetch_reddit()
-STEP 3: select_best_topic(candidates,     → 발행 이력 참고 주제 선별
-                          published_history)
-STEP 4: generate_newsletter(topic)        → 요약 + 딥다이브 + diagram_specs
-STEP 5: generate_diagrams(specs, dir)     → SVG 파일 생성
-STEP 6: save_newsletter(content, topic,   → MD + HTML 저장
-                        diagram_paths)
-STEP 6.8: build_all(OUTPUT_DIR)            → outputs/index.html + prev/next 주입
-STEP 7: update_backlog(title, url, tags)  → Published 등록
-STEP 8: generate_spinoffs(content, topic) → 파생 주제 추출
-        add_spinoffs_to_backlog(spinoffs) → Backlog + Spinoffs 섹션 추가
+STEP 1: Python — load_published_history()          → 다양성 가드레일용 발행 이력
+STEP 2: Python — fetch_github_trending()            → 크롤링 결과 JSON 으로 덤프
+        Python — fetch_arxiv()
+        Python — fetch_reddit()
+STEP 3: Claude 세션 — 후보를 읽고 1건 선별
+        (발행 이력 + 카테고리 빈도 + hook 기준)
+STEP 4: Claude 세션 — 5섹션 포맷 newsletter.md 를 Write 툴로 직접 작성
+        (title, 날짜, Summary ≤400자, 본문 1000~3000자 + ### 소제목,
+         References; 태그·이모지·메타라인 금지; ~합니다 정형체 유지)
+STEP 4.5: Claude 세션 — diagram_specs(JSON) 결정 → Python 으로 SVG 생성
+STEP 5: Python — diagrams.generate_diagrams(specs, issue_dir, slug)
+STEP 6: Python — writer.save_newsletter() 또는 Claude 가 직접 작성한 MD 재사용 후
+        MD → HTML 변환 및 ../style.css 링크 포함
+STEP 6.5: Python — run_content_validation + run_file_validation + 톤 린트
+STEP 6.8: Python — output.index_builder.build_all(OUTPUT_DIR)
+                   (outputs/index.html + 모든 newsletter.html 의 prev/next 주입)
+STEP 7: Python — output.backlog.update_backlog(title, source_url, tags, date)
+STEP 8: Claude 세션 — 파생 주제 2~3개 JSON 결정
+        Python — output.backlog.add_spinoffs_to_backlog(spinoffs, date)
+STEP 9: Bash — git add ai-newsletter/outputs NEWSLETTER_TOPICS.md
+              → git commit → git push origin main
 ```
+
+각 STEP 의 Python 호출은 `uv run python -c "..."` 형태로 수행하거나
+소규모 헬퍼 스크립트를 통해 실행합니다.
 
 ---
 
@@ -240,11 +267,8 @@ outputs/                                       ← Render.com static publish roo
 4. `config.py`에 관련 설정 상수 추가
 
 ### Claude 모델 변경
-`config.py`의 `CLAUDE_MODEL` 값을 수정합니다.
-```python
-CLAUDE_MODEL = "claude-sonnet-4-6"  # 빠른 실행
-CLAUDE_MODEL = "claude-opus-4-6"    # 고품질 (기본값)
-```
+별도 설정 불필요. LLM 작업은 스케줄 태스크를 실행하는 Claude 세션의
+모델을 그대로 사용합니다. `config.CLAUDE_MODEL` 은 레거시 상수입니다.
 
 ### 다이어그램 타입 추가
 `diagrams/generator.py`에 `_svg_새타입()` 함수를 추가하고,
@@ -260,8 +284,8 @@ CLAUDE_MODEL = "claude-opus-4-6"    # 고품질 (기본값)
 
 - **uv** — 가상환경 및 패키지 관리자 (필수). `pip` 직접 사용 금지.
 - Python 3.10+ — `.python-version` 파일로 버전 고정됨
-- 환경 변수: `ANTHROPIC_API_KEY` (필수, `.env` 파일 또는 shell export)
-- 네트워크: GitHub, ArXiv, Reddit 접근 가능해야 함
+- 환경 변수: 없음 (ANTHROPIC_API_KEY 는 더 이상 사용하지 않음)
+- 네트워크: GitHub, ArXiv, Reddit, github.com (git push) 접근 가능해야 함
 
 ---
 
