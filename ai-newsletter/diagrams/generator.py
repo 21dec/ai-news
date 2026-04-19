@@ -3,9 +3,11 @@ SVG Diagram Generator
 CO-STAR 스펙에 맞게 minimal infographic 스타일 SVG 다이어그램을 생성합니다.
 - 메인 컬러: #D75656 (레드), #EEEEEE (라이트 그레이)
 - 모든 텍스트는 영어
+- SVG 생성 후 cairosvg로 PNG 변환 (scale=2)
 """
 import os
 import sys
+from xml.sax.saxutils import escape as xml_escape
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from config import (
     DIAGRAM_COLOR_PRIMARY, DIAGRAM_COLOR_SECONDARY,
@@ -19,6 +21,11 @@ C_TEXT = DIAGRAM_COLOR_TEXT         # #222222
 C_WHITE = DIAGRAM_COLOR_ACCENT      # #FFFFFF
 C_LIGHT_RED = "#F0A0A0"
 C_DARK_RED = "#B03030"
+
+
+def _esc(text: str) -> str:
+    """SVG 텍스트용 XML 특수문자 이스케이프."""
+    return xml_escape(text)
 
 
 def _wrap_text(text: str, max_chars: int = 28) -> list[str]:
@@ -61,7 +68,7 @@ def _svg_comparison(spec: dict, width: int = 800, height: int = 420) -> str:
 
     # 제목
     lines.append(f'<text x="{width//2}" y="38" text-anchor="middle" '
-                 f'font-size="18" font-weight="700" fill="{C_TEXT}">{title}</text>')
+                 f'font-size="18" font-weight="700" fill="{C_TEXT}">{_esc(title)}</text>')
     lines.append(f'<line x1="60" y1="50" x2="{width-60}" y2="50" stroke="{C_GRAY}" stroke-width="1.5"/>')
 
     # 좌측 박스 (기존)
@@ -71,7 +78,7 @@ def _svg_comparison(spec: dict, width: int = 800, height: int = 420) -> str:
                  f'fill="#BBBBBB" rx="8"/>')
     lines.append(f'<rect x="{left_x}" y="85" width="{col_w}" height="20" fill="#BBBBBB"/>')
     lines.append(f'<text x="{left_x + col_w//2}" y="91" text-anchor="middle" '
-                 f'font-size="14" font-weight="700" fill="{C_TEXT}">{left_label}</text>')
+                 f'font-size="14" font-weight="700" fill="{C_TEXT}">{_esc(left_label)}</text>')
 
     for i, item in enumerate(left_items):
         y = 65 + 52 + i * item_height
@@ -79,7 +86,7 @@ def _svg_comparison(spec: dict, width: int = 800, height: int = 420) -> str:
         lines.append(f'<circle cx="{left_x + 18}" cy="{y + 10}" r="4" fill="#999999"/>')
         for j, line in enumerate(_wrap_text(item, 30)):
             lines.append(f'<text x="{left_x + 30}" y="{y + 14 + j * 16}" '
-                         f'font-size="12" fill="{C_TEXT}">{line}</text>')
+                         f'font-size="12" fill="{C_TEXT}">{_esc(line)}</text>')
 
     # 화살표 (중앙)
     arr_x = left_x + col_w + 20
@@ -95,14 +102,14 @@ def _svg_comparison(spec: dict, width: int = 800, height: int = 420) -> str:
                  f'fill="{C_RED}" rx="8"/>')
     lines.append(f'<rect x="{right_x}" y="85" width="{col_w}" height="20" fill="{C_RED}"/>')
     lines.append(f'<text x="{right_x + col_w//2}" y="91" text-anchor="middle" '
-                 f'font-size="14" font-weight="700" fill="{C_WHITE}">{right_label}</text>')
+                 f'font-size="14" font-weight="700" fill="{C_WHITE}">{_esc(right_label)}</text>')
 
     for i, item in enumerate(right_items):
         y = 65 + 52 + i * item_height
         lines.append(f'<circle cx="{right_x + 18}" cy="{y + 10}" r="4" fill="{C_RED}"/>')
         for j, line in enumerate(_wrap_text(item, 30)):
             lines.append(f'<text x="{right_x + 30}" y="{y + 14 + j * 16}" '
-                         f'font-size="12" fill="{C_TEXT}">{line}</text>')
+                         f'font-size="12" fill="{C_TEXT}">{_esc(line)}</text>')
 
     # 하단 레이블
     lines.append(f'<text x="{left_x + col_w//2}" y="{height - 12}" text-anchor="middle" '
@@ -133,7 +140,7 @@ def _svg_flow(spec: dict, width: int = 800) -> str:
              f'viewBox="0 0 {width} {height}" font-family="Inter, Arial, sans-serif">']
     lines.append(f'<rect width="{width}" height="{height}" fill="{C_WHITE}" rx="12"/>')
     lines.append(f'<text x="{width//2}" y="32" text-anchor="middle" '
-                 f'font-size="16" font-weight="700" fill="{C_TEXT}">{title}</text>')
+                 f'font-size="16" font-weight="700" fill="{C_TEXT}">{_esc(title)}</text>')
 
     start_x = padding
     y = 55
@@ -156,7 +163,7 @@ def _svg_flow(spec: dict, width: int = 800) -> str:
         line_y = y + 30
         for line in wrapped[:2]:
             lines.append(f'<text x="{x + step_w//2}" y="{line_y}" text-anchor="middle" '
-                         f'font-size="12" font-weight="600" fill="{text_color}">{line}</text>')
+                         f'font-size="12" font-weight="600" fill="{text_color}">{_esc(line)}</text>')
             line_y += 15
 
         # 화살표
@@ -179,7 +186,7 @@ def _svg_flow(spec: dict, width: int = 800) -> str:
 
 def generate_diagrams(diagram_specs: list[dict], output_dir: str, slug: str) -> list[str]:
     """
-    diagram_specs에 따라 SVG 파일을 생성하고 파일 경로 목록을 반환합니다.
+    diagram_specs에 따라 SVG → PNG 다이어그램을 생성하고 PNG 경로 목록을 반환합니다.
 
     Args:
         diagram_specs: generator.py에서 생성된 스펙 리스트
@@ -187,15 +194,19 @@ def generate_diagrams(diagram_specs: list[dict], output_dir: str, slug: str) -> 
         slug: 파일명 접두사 (날짜+제목 슬러그)
 
     Returns:
-        생성된 SVG 파일 경로 리스트
+        생성된 PNG 파일 경로 리스트
     """
+    import cairosvg
+
     os.makedirs(output_dir, exist_ok=True)
     paths = []
 
     for i, spec in enumerate(diagram_specs, 1):
         diagram_type = spec.get("type", "comparison")
-        filename = f"{slug}_diagram_{i}.svg"
-        filepath = os.path.join(output_dir, filename)
+        svg_filename = f"{slug}_diagram_{i}.svg"
+        png_filename = f"{slug}_diagram_{i}.png"
+        svg_filepath = os.path.join(output_dir, svg_filename)
+        png_filepath = os.path.join(output_dir, png_filename)
 
         if diagram_type == "comparison":
             svg_content = _svg_comparison(spec)
@@ -204,10 +215,12 @@ def generate_diagrams(diagram_specs: list[dict], output_dir: str, slug: str) -> 
         else:
             svg_content = _svg_comparison(spec)
 
-        with open(filepath, "w", encoding="utf-8") as f:
+        with open(svg_filepath, "w", encoding="utf-8") as f:
             f.write(svg_content)
 
-        paths.append(filepath)
-        print(f"[Diagrams] 생성 완료: {filename}")
+        cairosvg.svg2png(url=svg_filepath, write_to=png_filepath, scale=2)
+
+        paths.append(png_filepath)
+        print(f"[Diagrams] 생성 완료: {svg_filename} → {png_filename}")
 
     return paths
