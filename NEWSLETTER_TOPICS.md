@@ -3,6 +3,9 @@
 이 문서는 AI 뉴스레터 발행을 위한 글감(소재)을 관리하는 백로그입니다. 뉴스레터를 작성하면서 파생되는 새로운 아이디어나 후속 기술들은 [New Ideas / Spinoffs] 섹션에 지속적으로 추가됩니다.
 
 ## 📋 [Backlog] 작성 대기 중인 주제
+* **LLM 내부 Attention Head 프루닝 실전: ProxySPEX로 MMLU 최적 서브셋 탐색** `[architecture]` #pruning #attention #optimization #spex
+  > 본문에서 ProxySPEX 기반 프루닝이 성능을 향상시킬 수 있다고 언급했지만, 실제 모델별(Llama, Mistral 등) 프루닝 비율과 태스크별 성능 변화를 실측하는 가이드가 필요합니다.
+  > *(스핀오프 from: SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크 | 추가: 2026-04-19)*
 * **도메인별 복잡도 보정: 합성 데이터의 난이도 분포가 다운스트림 성능에 미치는 비선형 효과** `[evaluation]` #synthetic-data #complexity #evaluation #domain-specific
   > 본문에서 수학은 높은 복잡도가 +10%를 가져오지만 법률에서는 오히려 하락한다고 언급했는데, 도메인별 최적 난이도 분포를 탐색하는 체계적 방법론이 필요합니다.
   > *(스핀오프 from: Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크 | 추가: 2026-04-19)*
@@ -36,6 +39,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크** — `2026-04-19` [http://bair.berkeley.edu/blog/2026/03/13/spex/](http://bair.berkeley.edu/blog/2026/03/13/spex/) #evaluation #interpretability #interaction #spex
 * **Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크** — `2026-04-19` [https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/](https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/) #training #synthetic-data #mechanism-design #google
 * **GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리** — `2026-04-19` [https://github.com/lsdefine/GenericAgent](https://github.com/lsdefine/GenericAgent) #architecture #agent #memory #efficiency #skill-tree
 * **Project Glasswing: Mythos Preview 가 드러낸 LLM 보안 감사의 임계점** — `2026-04-19` [https://www.anthropic.com/glasswing](https://www.anthropic.com/glasswing) #frontier-model #security #zero-day #glasswing
@@ -47,6 +51,8 @@
 * (발행이 완료된 뉴스레터 목록과 발행일자를 기록합니다)
 
 ## 💡 [New Ideas / Spinoffs] 생성된 글로부터 포착된 신규 글감
+* `[architecture]` **LLM 내부 Attention Head 프루닝 실전: ProxySPEX로 MMLU 최적 서브셋 탐색** ← SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크 작성 중 포착
+  > 프루닝 적용의 구체적 실전 가이드가 본문에서 부재
 * `[evaluation]` **도메인별 복잡도 보정: 합성 데이터의 난이도 분포가 다운스트림 성능에 미치는 비선형 효과** ← Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크 작성 중 포착
   > 복잡도 조정 효과의 도메인 의존성이 실무적으로 중요하지만 본문에서 정밀하게 다루지 않음
 * `[architecture]` **계층형 메모리 압축: L4 Session Archive의 요약 전략과 정보 손실 측정** ← GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리 작성 중 포착
