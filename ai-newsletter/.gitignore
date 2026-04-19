@@ -1,0 +1,21 @@
+# 가상환경 (uv가 관리)
+.venv/
+
+# 환경 변수 (API 키 포함)
+.env
+
+# 생성된 뉴스레터 출력물 (선택적으로 제외)
+# outputs/
+
+# Python 캐시
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
