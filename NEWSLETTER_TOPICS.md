@@ -3,40 +3,21 @@
 이 문서는 AI 뉴스레터 발행을 위한 글감(소재)을 관리하는 백로그입니다. 뉴스레터를 작성하면서 파생되는 새로운 아이디어나 후속 기술들은 [New Ideas / Spinoffs] 섹션에 지속적으로 추가됩니다.
 
 ## 📋 [Backlog] 작성 대기 중인 주제
-* **Agents SDK 트레이싱을 OpenTelemetry로 내보내기: set_trace_processors 실전** `[tooling]` #tracing #opentelemetry #observability
-  > OpenAI 대시보드에만 저장되던 에이전트 트레이스를 OTLP exporter로 Grafana Tempo, Honeycomb, Datadog 등으로 내보내는 방법과 샘플링·보존 정책 설계를 다룹니다.
+* **handoff 도중의 스트리밍 응답 처리: 에이전트 전환 경계에서의 토큰 연속성** `[agent]` #agents-sdk #streaming #handoff
+  > handoff 가 발생하는 순간 원래 에이전트의 스트림이 끊기고 새 에이전트의 스트림이 시작되는 구간에서 토큰 손실·중복·UI 깜박임을 막기 위한 버퍼링·시그널링 설계 패턴을 정리합니다.
   > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
-* **멀티에이전트 회귀 테스트: handoff 라우팅 정확도를 측정하는 평가 셋 설계** `[evaluation]` #evaluation #multi-agent #regression-test
-  > handoff 라우팅이 모델 판단에 의존하는 구조에서 에이전트 전환 정확도·잘못된 handoff 비율·평균 depth를 정량화하는 gold-label 평가셋 구축과 CI 통합 전략을 다룹니다.
-  > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
-* **Pydantic Guardrail 패턴: 입력 차단, 출력 검증, 툴 인자 스키마의 단일화** `[framework]` #pydantic #guardrails #schema
-  > Agents SDK의 입·출력 guardrail과 function tool의 인자 스키마를 동일 Pydantic 계층으로 통합해 타입 안전성과 LLM-as-judge 평가를 함께 수행하는 설계 패턴을 정리합니다.
-  > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
-* **RAG 파이프라인 파서 라우팅: Magika 기반 콘텐츠 타입 감지로 docx/pdf/script 분기** `[rag]` #rag #parser-routing #preprocessing
-  > RAG 전처리 단계에서 업로드 파일을 확장자 대신 Magika의 콘텐츠 타입 + confidence 기반으로 파서(pypdf, python-docx, Unstructured, Tree-sitter 등)에 라우팅하는 실전 패턴을 다룹니다.
+* **Magika ONNX Runtime 이식: 브라우저·엣지에서의 파일 타입 검출 지연 측정** `[tooling]` #magika #onnx #edge #wasm
+  > Python 배포 환경에 묶여 있던 Magika 를 ONNX Runtime(Web·Mobile) 으로 이식해 업로드 게이트를 클라이언트 단에서 먼저 수행할 때의 p95 지연·메모리·정확도 회귀를 실측합니다.
   > *(스핀오프 from: Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기 | 추가: 2026-04-19)*
-* **업로드 게이트 다층 방어: Magika + ClamAV + YARA 조합 설계** `[security]` #security #clamav #yara #defense-in-depth
-  > 콘텐츠 타입 판정(Magika), 안티바이러스 스캐닝(ClamAV), 시그니처 기반 악성 패턴 매칭(YARA)을 단일 파이프라인에 배치하는 레이어링 전략과 각 단계의 임계값·타임아웃·폴백 규칙을 정리합니다.
-  > *(스핀오프 from: Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기 | 추가: 2026-04-19)*
-* **libmagic vs Magika 정확도 실측: 사내 파일 코퍼스로 F1·레이턴시 벤치마크** `[evaluation]` #evaluation #benchmark #file-detection
-  > 공개 데이터셋이 아닌 실제 사내 업로드 로그에서 추출한 혼합 포맷 코퍼스를 사용해 libmagic·Magika·확장자 기반 판정의 Top-1 정확도, F1, p95 레이턴시를 측정하는 방법론과 결과 해석을 다룹니다.
-  > *(스핀오프 from: Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기 | 추가: 2026-04-19)*
-* **LangGraph 체크포인터 성능 튜닝: SqliteSaver vs AsyncPostgresSaver 실측** `[evaluation]` #langgraph #checkpoint #latency #benchmark
-  > 고빈도 tool 루프에서 체크포인트 I/O가 레이턴시 병목이 되는 지점과 비동기 saver 전환 시 개선폭을 측정한다.
+* **LangGraph interrupt() 기반 Human-in-the-Loop: 승인 게이트와 에스컬레이션 설계** `[agent]` #langgraph #human-in-the-loop #interrupt #approval-gate
+  > 1.1 에서 정식화된 `interrupt()` API 로 위험 툴 실행 직전 사용자 승인을 받는 게이트·타임아웃 시 자동 에스컬레이션·재개 시 상태 복원을 결합한 실전 패턴을 다룹니다.
   > *(스핀오프 from: 단방향 체인을 넘어: LangGraph 1.1로 보는 순환 워크플로우와 상태 관리 실전 | 추가: 2026-04-19)*
-* **LangGraph + Temporal: 언제 프레임워크 내장 durable execution만으로 충분한가** `[architecture]` #langgraph #temporal #workflow #durable-execution
-  > LangGraph의 durable execution이 워크플로우 엔진을 완전히 대체할 수 있는 시나리오와 Temporal/Airflow를 겸용해야 하는 시나리오를 구분한다.
-  > *(스핀오프 from: 단방향 체인을 넘어: LangGraph 1.1로 보는 순환 워크플로우와 상태 관리 실전 | 추가: 2026-04-19)*
-* **StateSchema 마이그레이션 가이드: TypedDict에서 Zod/Pydantic으로** `[framework]` #langgraph #statescheme #zod #pydantic #migration
-  > 2026년 1월 도입된 StateSchema로 기존 TypedDict 기반 상태를 옮기는 단계별 패턴과 런타임 검증 이점.
-  > *(스핀오프 from: 단방향 체인을 넘어: LangGraph 1.1로 보는 순환 워크플로우와 상태 관리 실전 | 추가: 2026-04-19)*
-* **vLLM + FP8 서빙: DeepGEMM 실제 통합 가이드** `[infra]` #vllm #fp8 #serving #integration
-  > vLLM의 FP8 지원 현황과 DeepGEMM 커널을 custom backend로 연결하는 실전 방법
-  > *(스핀오프 from: DeepGEMM: FP8 GEMM 커널 | 추가: 2026-04-19)*
-* **GPTQ/AWQ vs FP8: 실측 벤치마크로 보는 양자화 선택 기준** `[evaluation]` #quantization #benchmark #gptq #awq
-  > Post-training quantization 3가지 방식의 정확도·속도·메모리 트레이드오프를 동일 조건에서 비교
-  > *(스핀오프 from: DeepGEMM: FP8 GEMM 커널 | 추가: 2026-04-19)*
-* **초경량 In-process 벡터 DB (NanoVec) 활용 가이드** (초안 작성 완료)
+* **MoE 라우팅에서 FP8 GEMM 적용: expert 부하 불균형이 커널 효율에 미치는 영향** `[infra]` #moe #fp8 #gemm #load-balancing
+  > 전체 토큰을 균등 분산한 dense GEMM 과 달리 MoE 는 expert 별 토큰 수가 편향되어 FP8 커널의 MMA·타일 사이즈가 낭비되는 구조를 분석하고, capacity factor·drop-token 비율별 실측 처리량을 정리합니다.
+  > *(스핀오프 from: FlashAttention-3 vs DeepGEMM: H100 메모리 최적화, 두 갈래의 접근법 | 추가: 2026-04-19)*
+* **DeepGEMM 기반 FP8 pre-training: 손실 발산 없이 안정화하는 동적 스케일링 전략** `[training]` #fp8 #pretraining #numerical-stability #scaling
+  > 추론 영역에 머물던 FP8 GEMM 을 pre-training 루프에 투입할 때 발생하는 수치 발산을 per-tensor·per-block 동적 스케일링과 selective-precision 으로 억제하는 DeepSeek·NVIDIA 공개 레시피를 비교합니다.
+  > *(스핀오프 from: DeepGEMM: DeepSeek이 공개한 FP8 GEMM 커널, GPU 비용의 판도를 바꾼다 | 추가: 2026-04-19)*
 * **로컬 LLM 서빙 비용 70% 절감:** vLLM과 PagedAttention을 활용한 인프라 아키텍처
 * **RAG 파이프라인의 환각 수치화:** 오픈소스 평가 프레임워크 'Ragas' 도입기
 * **멀티모달 데이터 전처리:** Vision-Language Model(VLM)을 활용한 복잡한 재무제표 PDF 파싱 파이프라인
@@ -46,6 +27,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **Project Glasswing: Mythos Preview 가 드러낸 LLM 보안 감사의 임계점** — `2026-04-19` [https://www.anthropic.com/glasswing](https://www.anthropic.com/glasswing) #frontier-model #security #zero-day #glasswing
 * **Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계** — `2026-04-19` [https://github.com/openai/openai-agents-python](https://github.com/openai/openai-agents-python) #agent #handoff #multi-agent #openai
 * **Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기** — `2026-04-19` [https://github.com/google/magika](https://github.com/google/magika) #content-detection #tooling #pipeline #classification
 * **단방향 체인을 넘어: LangGraph 1.1로 보는 순환 워크플로우와 상태 관리 실전** — `2026-04-19` [https://github.com/langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) #agent #framework #langgraph #workflow #state
@@ -72,8 +54,6 @@
   > 본문에서 '별도 워크플로우 엔진이 필요 없다'고 언급 — 어디까지 true한지 경계를 짚는 글이 필요함.
 * `[framework]` **StateSchema 마이그레이션 가이드: TypedDict에서 Zod/Pydantic으로** ← 단방향 체인을 넘어: LangGraph 1.1로 보는 순환 워크플로우와 상태 관리 실전 작성 중 포착
   > 본문에서 StateSchema 도입을 요약만 했을 뿐 마이그레이션 실전을 다루지 않음.
-* `[architecture]` **FlashAttention-3 vs DeepGEMM: H100 메모리 최적화 두 접근법 비교** ← DeepGEMM: FP8 GEMM 커널 작성 중 포착
-  > DeepGEMM에서 wgmma/TMA 언급 → FlashAttention-3도 같은 H100 명령어 활용, 접근법 차이 탐색
 * `[infra]` **vLLM + FP8 서빙: DeepGEMM 실제 통합 가이드** ← DeepGEMM: FP8 GEMM 커널 작성 중 포착
   > 실무 도입 섹션에서 vLLM 통합 복잡도를 언급했지만 구체적 방법은 다루지 않음
 * `[evaluation]` **GPTQ/AWQ vs FP8: 실측 벤치마크로 보는 양자화 선택 기준** ← DeepGEMM: FP8 GEMM 커널 작성 중 포착
