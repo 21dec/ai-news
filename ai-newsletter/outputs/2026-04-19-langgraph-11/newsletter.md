@@ -55,7 +55,7 @@ app = g.compile()
 핵심은 `add_conditional_edges`의 두 번째 인자입니다. 상태를 받아 다음 노드 이름을 반환하는 **순수 함수**로 retry·fallback·early-exit 세 가지 패턴을 한 번에 표현합니다. 이 함수를 순수 함수로 유지해야 체크포인트 재개 시 결정적으로 재현됩니다. 실무에서 자주 누락되는 지점입니다.
 
 
-![LCEL Chain vs LangGraph Stateful Graph](2026-04-19-langgraph-11_diagram_1.svg)
+![LCEL Chain vs LangGraph Stateful Graph](2026-04-19-langgraph-11_diagram_1.png)
 
 
 ### Durable Execution: 체크포인터 한 줄의 효과
@@ -78,7 +78,7 @@ app.invoke(None, config)   # 중단된 노드부터 재개
 멀티데이 승인 워크플로우, 백그라운드 job, 에이전트 장애 복구처럼 기존에 Temporal·Airflow 같은 워크플로우 엔진을 별도 운영해야 했던 케이스를 프레임워크 내부에서 처리합니다. 1.1 라인은 `AsyncSqliteSaver`, `AsyncPostgresSaver` 같은 비동기 체크포인터도 함께 제공하여 고빈도 tool 루프에서도 사용 가능합니다.
 
 
-![LangGraph Execution Model](2026-04-19-langgraph-11_diagram_2.svg)
+![LangGraph Execution Model](2026-04-19-langgraph-11_diagram_2.png)
 
 
 ### 2026 업데이트: StateSchema와 새 Value 타입

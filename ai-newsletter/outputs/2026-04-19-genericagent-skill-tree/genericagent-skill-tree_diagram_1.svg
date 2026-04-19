@@ -23,7 +23,7 @@
 <rect x="420" y="85" width="340" height="20" fill="#D75656"/>
 <text x="590" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">GenericAgent</text>
 <circle cx="438" cy="127" r="4" fill="#D75656"/>
-<text x="450" y="131" font-size="12" fill="#222222">Context: <30K tokens</text>
+<text x="450" y="131" font-size="12" fill="#222222">Context: &lt;30K tokens</text>
 <circle cx="438" cy="163" r="4" fill="#D75656"/>
 <text x="450" y="167" font-size="12" fill="#222222">Selective L1 index routing</text>
 <circle cx="438" cy="199" r="4" fill="#D75656"/>

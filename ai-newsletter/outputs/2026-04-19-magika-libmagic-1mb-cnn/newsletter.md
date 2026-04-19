@@ -13,7 +13,7 @@ Magika는 Google이 공개한 딥러닝 기반 파일 콘텐츠 타입 검출기
 libmagic은 `/usr/share/file/magic` 시그니처 데이터베이스를 순차 매칭하며, 확장자 신호와 결합해 MIME 타입을 판정합니다. 실무에서는 세 가지 문제가 반복됩니다. 첫째, 확장자와 매직 바이트가 모두 모호한 스크립트 계열(Python, JavaScript, TypeScript, Ruby, Shell)은 단순 휴리스틱으로 구분하기 어려워 다수가 `text/plain` 으로 수렴합니다. 둘째, Office 계열 문서(docx, xlsx, pptx)는 내부 구조가 ZIP 컨테이너이므로 같은 매직 바이트 `PK\x03\x04` 를 공유하며, 확장자가 제거되거나 위조되면 `application/zip` 으로 분류됩니다. 셋째, 악성 페이로드가 헤더만 위조한 경우 시그니처 기반 판정이 속기 쉽습니다. 업로드 게이트·RAG 파서 라우팅·DLP 스캐닝처럼 다운스트림이 타입 판정에 의존하는 구조에서는 이러한 오탐이 파이프라인 전체로 전파됩니다.
 
 
-![libmagic vs Magika for content type detection](2026-04-19-magika-libmagic-1mb-cnn_diagram_1.svg)
+![libmagic vs Magika for content type detection](2026-04-19-magika-libmagic-1mb-cnn_diagram_1.png)
 
 
 ### Magika의 구조와 학습 데이터
@@ -37,7 +37,7 @@ with open("/uploads/unknown.bin", "rb") as f:
 `identify_bytes` 는 디스크에 쓰기 전 단계에서 판정이 필요한 FastAPI·Django 업로드 핸들러에 적합합니다. 모델은 프로세스당 한 번 로드되므로 이후 호출은 순수 텐서 연산이며 I/O 병목이 없습니다.
 
 
-![Magika inference pipeline](2026-04-19-magika-libmagic-1mb-cnn_diagram_2.svg)
+![Magika inference pipeline](2026-04-19-magika-libmagic-1mb-cnn_diagram_2.png)
 
 
 ### 실무 도입 시 고려사항

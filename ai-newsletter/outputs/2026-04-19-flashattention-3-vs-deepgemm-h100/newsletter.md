@@ -83,11 +83,11 @@ def hopper_forward(x, qkv_w, out_w, ffn_w, scales):
 실제 vLLM PR을 보면 이 스위칭을 `torch.cuda.get_device_capability() == (9, 0)` 조건 아래에서 분기하고, Ampere 이하에서는 기존 FA2 + cuBLAS 경로로 fallback하는 방식을 사용합니다.
 
 
-![FlashAttention-3 vs DeepGEMM: bottleneck targeting](2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_1.svg)
+![FlashAttention-3 vs DeepGEMM: bottleneck targeting](2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_1.png)
 
 
 
-![Transformer block with FA3 + DeepGEMM](2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_2.svg)
+![Transformer block with FA3 + DeepGEMM](2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_2.png)
 
 
 ### 도입 시 체크리스트

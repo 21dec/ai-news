@@ -38,8 +38,8 @@ triage = Agent(
 )
 result = Runner.run_sync(triage, &quot;지난주 결제 건 환불이 가능한가요?&quot;)
 </code></pre>
-<figure><img src="2026-04-19-swarm-openai-agents-sdk-handoff_diagram_1.svg" alt="LangGraph Graph vs Agents SDK Handoff"><figcaption>LangGraph Graph vs Agents SDK Handoff</figcaption></figure>
-<figure><img src="2026-04-19-swarm-openai-agents-sdk-handoff_diagram_2.svg" alt="Triage Handoff Flow"><figcaption>Triage Handoff Flow</figcaption></figure>
+<figure><img src="2026-04-19-swarm-openai-agents-sdk-handoff_diagram_1.png" alt="LangGraph Graph vs Agents SDK Handoff"><figcaption>LangGraph Graph vs Agents SDK Handoff</figcaption></figure>
+<figure><img src="2026-04-19-swarm-openai-agents-sdk-handoff_diagram_2.png" alt="Triage Handoff Flow"><figcaption>Triage Handoff Flow</figcaption></figure>
 <h3>handoff의 구현 원리</h3>
 <p>handoff는 내부적으로 함수 도구로 구현됩니다. 삼각 분류 에이전트의 도구 목록에 transfer_to_refund, transfer_to_billing 같은 자동 생성 함수가 추가되고, 모델이 해당 함수를 호출하면 Runner가 대화 상태와 함께 대상 에이전트로 제어를 넘깁니다. LangGraph처럼 명시적 엣지를 선언하지 않아 보일러플레이트가 줄어들지만, 라우팅 판단이 모델에 의존한다는 한계가 생깁니다. 라우팅 정확도를 보장하려면 지시문 설계와 guardrail 테스트에 품이 더 들어갑니다.</p>
 <h3>가드레일과 트레이싱</h3>

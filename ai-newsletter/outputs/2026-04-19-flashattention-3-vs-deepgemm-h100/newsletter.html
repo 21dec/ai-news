@@ -71,8 +71,8 @@ def hopper_forward(x, qkv_w, out_w, ffn_w, scales):
     return deep_gemm.gemm_fp8_fp8_bf16_nt(o, ffn_w, scales.post_attn, scales.ffn_w)
 </code></pre>
 <p>실제 vLLM PR을 보면 이 스위칭을 <code>torch.cuda.get_device_capability() == (9, 0)</code> 조건 아래에서 분기하고, Ampere 이하에서는 기존 FA2 + cuBLAS 경로로 fallback하는 방식을 사용합니다.</p>
-<figure><img src="2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_1.svg" alt="FlashAttention-3 vs DeepGEMM: bottleneck targeting"><figcaption>FlashAttention-3 vs DeepGEMM: bottleneck targeting</figcaption></figure>
-<figure><img src="2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_2.svg" alt="Transformer block with FA3 + DeepGEMM"><figcaption>Transformer block with FA3 + DeepGEMM</figcaption></figure>
+<figure><img src="2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_1.png" alt="FlashAttention-3 vs DeepGEMM: bottleneck targeting"><figcaption>FlashAttention-3 vs DeepGEMM: bottleneck targeting</figcaption></figure>
+<figure><img src="2026-04-19-flashattention-3-vs-deepgemm-h100_diagram_2.png" alt="Transformer block with FA3 + DeepGEMM"><figcaption>Transformer block with FA3 + DeepGEMM</figcaption></figure>
 <h3>도입 시 체크리스트</h3>
 <p>1. <strong>Hopper 한정</strong>: 두 라이브러리 모두 <code>sm_90a</code>의 <code>wgmma</code>·<code>TMA</code>에 하드 의존합니다. A100(sm_80)이나 그 이전 세대에서는 동작하지 않으므로 기존 FA2 + cuBLAS 경로를 그대로 유지해야 합니다.<br>2. <strong>FP8 정확도 교차 검증</strong>: DeepGEMM의 fine-grained scaling을 사용하더라도 PPL이 미세하게 변동할 수 있습니다. 특히 RLHF로 튜닝된 모델은 활성 분포가 민감하므로, downstream eval(MT-Bench, HumanEval 등)로 반드시 교차 확인이 필요합니다.<br>3. <strong>JIT warm-up</strong>: DeepGEMM은 첫 호출 시 Ninja 컴파일로 shape당 수 초(관찰 범위 5~15초) 지연이 발생합니다. 서빙 시작 직후 대표 shape 세트에 대한 warm-up GEMM 루프를 한 번 실행하지 않으면 p99 latency가 악화됩니다.<br>4. <strong>MoE 특화 여부</strong>: DeepGEMM의 grouped GEMM 최적화는 MoE를 전제로 합니다. Mistral 7B 같은 dense 모델에서는 이점이 감소하므로 cuBLAS FP8·Transformer Engine과 실측 비교가 필요합니다.<br>5. <strong>TE와의 역할 분담</strong>: NVIDIA Transformer Engine(TE)도 FP8 GEMM을 제공하지만 scaling granularity는 텐서 단위에 가깝습니다. MoE·long-context 워크로드에서는 DeepGEMM의 블록 단위 scaling이 유리한 편이며, dense·표준 transformer에서는 TE가 더 안정적인 선택지로 판단됩니다.</p>
 <h3>정리</h3>

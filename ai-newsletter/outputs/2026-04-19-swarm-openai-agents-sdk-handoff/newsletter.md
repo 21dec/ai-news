@@ -30,11 +30,11 @@ result = Runner.run_sync(triage, "지난주 결제 건 환불이 가능한가요
 ```
 
 
-![LangGraph Graph vs Agents SDK Handoff](2026-04-19-swarm-openai-agents-sdk-handoff_diagram_1.svg)
+![LangGraph Graph vs Agents SDK Handoff](2026-04-19-swarm-openai-agents-sdk-handoff_diagram_1.png)
 
 
 
-![Triage Handoff Flow](2026-04-19-swarm-openai-agents-sdk-handoff_diagram_2.svg)
+![Triage Handoff Flow](2026-04-19-swarm-openai-agents-sdk-handoff_diagram_2.png)
 
 
 ### handoff의 구현 원리
