@@ -3,6 +3,15 @@
 이 문서는 AI 뉴스레터 발행을 위한 글감(소재)을 관리하는 백로그입니다. 뉴스레터를 작성하면서 파생되는 새로운 아이디어나 후속 기술들은 [New Ideas / Spinoffs] 섹션에 지속적으로 추가됩니다.
 
 ## 📋 [Backlog] 작성 대기 중인 주제
+* **Agents SDK 트레이싱을 OpenTelemetry로 내보내기: set_trace_processors 실전** `[tooling]` #tracing #opentelemetry #observability
+  > OpenAI 대시보드에만 저장되던 에이전트 트레이스를 OTLP exporter로 Grafana Tempo, Honeycomb, Datadog 등으로 내보내는 방법과 샘플링·보존 정책 설계를 다룹니다.
+  > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
+* **멀티에이전트 회귀 테스트: handoff 라우팅 정확도를 측정하는 평가 셋 설계** `[evaluation]` #evaluation #multi-agent #regression-test
+  > handoff 라우팅이 모델 판단에 의존하는 구조에서 에이전트 전환 정확도·잘못된 handoff 비율·평균 depth를 정량화하는 gold-label 평가셋 구축과 CI 통합 전략을 다룹니다.
+  > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
+* **Pydantic Guardrail 패턴: 입력 차단, 출력 검증, 툴 인자 스키마의 단일화** `[framework]` #pydantic #guardrails #schema
+  > Agents SDK의 입·출력 guardrail과 function tool의 인자 스키마를 동일 Pydantic 계층으로 통합해 타입 안전성과 LLM-as-judge 평가를 함께 수행하는 설계 패턴을 정리합니다.
+  > *(스핀오프 from: Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 | 추가: 2026-04-19)*
 * **RAG 파이프라인 파서 라우팅: Magika 기반 콘텐츠 타입 감지로 docx/pdf/script 분기** `[rag]` #rag #parser-routing #preprocessing
   > RAG 전처리 단계에서 업로드 파일을 확장자 대신 Magika의 콘텐츠 타입 + confidence 기반으로 파서(pypdf, python-docx, Unstructured, Tree-sitter 등)에 라우팅하는 실전 패턴을 다룹니다.
   > *(스핀오프 from: Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기 | 추가: 2026-04-19)*
@@ -37,6 +46,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계** — `2026-04-19` [https://github.com/openai/openai-agents-python](https://github.com/openai/openai-agents-python) #agent #handoff #multi-agent #openai
 * **Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기** — `2026-04-19` [https://github.com/google/magika](https://github.com/google/magika) #content-detection #tooling #pipeline #classification
 * **단방향 체인을 넘어: LangGraph 1.1로 보는 순환 워크플로우와 상태 관리 실전** — `2026-04-19` [https://github.com/langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) #agent #framework #langgraph #workflow #state
 * **FlashAttention-3 vs DeepGEMM: H100 메모리 최적화, 두 갈래의 접근법** — `2026-04-19` [https://github.com/Dao-AILab/flash-attention](https://github.com/Dao-AILab/flash-attention) #attention #h100 #fp8 #hopper #gemm #architecture
@@ -44,6 +54,12 @@
 * (발행이 완료된 뉴스레터 목록과 발행일자를 기록합니다)
 
 ## 💡 [New Ideas / Spinoffs] 생성된 글로부터 포착된 신규 글감
+* `[tooling]` **Agents SDK 트레이싱을 OpenTelemetry로 내보내기: set_trace_processors 실전** ← Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 작성 중 포착
+  > 원글이 SDK의 기본 트레이싱을 언급했으나 외부 관측 스택 연동의 구체 절차와 태그 매핑은 다루지 않아 후속으로 자연스럽게 이어집니다.
+* `[evaluation]` **멀티에이전트 회귀 테스트: handoff 라우팅 정확도를 측정하는 평가 셋 설계** ← Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 작성 중 포착
+  > 원글에서 '라우팅 정확도를 보장하려면 품이 더 든다'고만 언급했으므로 실제 평가 메트릭과 테스트 자동화를 다루는 별도 글로 분리하기 적합합니다.
+* `[framework]` **Pydantic Guardrail 패턴: 입력 차단, 출력 검증, 툴 인자 스키마의 단일화** ← Swarm을 넘어서: OpenAI Agents SDK의 handoff 중심 멀티에이전트 설계 작성 중 포착
+  > 원글에서 guardrail을 소개했지만 Pydantic 모델을 도구 스키마와 어떻게 공유하고 재사용하는지는 다루지 않아 실무 구현 패턴으로 확장 가능합니다.
 * `[rag]` **RAG 파이프라인 파서 라우팅: Magika 기반 콘텐츠 타입 감지로 docx/pdf/script 분기** ← Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기 작성 중 포착
   > 원글에서 Magika 의 활용 영역으로 RAG 전처리를 언급만 했을 뿐 구체적 라우팅 구현 패턴은 다루지 않아 후속 글로 자연스럽게 이어집니다.
 * `[security]` **업로드 게이트 다층 방어: Magika + ClamAV + YARA 조합 설계** ← Magika: libmagic의 오탐을 걷어내는 1MB CNN 기반 파일 타입 검출기 작성 중 포착
