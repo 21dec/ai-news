@@ -3,6 +3,9 @@
 이 문서는 AI 뉴스레터 발행을 위한 글감(소재)을 관리하는 백로그입니다. 뉴스레터를 작성하면서 파생되는 새로운 아이디어나 후속 기술들은 [New Ideas / Spinoffs] 섹션에 지속적으로 추가됩니다.
 
 ## 📋 [Backlog] 작성 대기 중인 주제
+* **Codex의 computer use는 얼마나 안전한가: 로컬 앱 조작 에이전트의 권한 격리·승인 플로우·감사 로그 설계** `[security]` #Codex #ComputerUse #Sandboxing
+  > Codex가 IDE를 넘어 브라우저·터미널·로컬 앱까지 조작하기 시작하면 생산성보다 먼저 부딪히는 문제는 보안과 통제입니다. AI 엔지니어는 어떤 권한 모델, 사용자 승인 단계, 실행 샌드박스, 로그 체계를 갖춰야 실제 팀 환경에서 안심하고 배포할 수 있는지 궁금해할 가능성이 큽니다.
+  > *(스핀오프 from: Codex, 코드 생성기를 넘어 개발 워크스테이션으로 확장 | 추가: 2026-04-20)*
 * **LLM 내부 Attention Head 프루닝 실전: ProxySPEX로 MMLU 최적 서브셋 탐색** `[architecture]` #pruning #attention #optimization #spex
   > 본문에서 ProxySPEX 기반 프루닝이 성능을 향상시킬 수 있다고 언급했지만, 실제 모델별(Llama, Mistral 등) 프루닝 비율과 태스크별 성능 변화를 실측하는 가이드가 필요합니다.
   > *(스핀오프 from: SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크 | 추가: 2026-04-19)*
@@ -39,6 +42,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **Codex, 코드 생성기를 넘어 개발 워크스테이션으로 확장** — `2026-04-20` [https://openai.com/index/codex-for-almost-everything](https://openai.com/index/codex-for-almost-everything) #AI에이전트 #Codex #DeveloperTools #tooling #OpenAI
 * **SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크** — `2026-04-19` [http://bair.berkeley.edu/blog/2026/03/13/spex/](http://bair.berkeley.edu/blog/2026/03/13/spex/) #evaluation #interpretability #interaction #spex
 * **Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크** — `2026-04-19` [https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/](https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/) #training #synthetic-data #mechanism-design #google
 * **GenericAgent: 3,000줄 시드 코드에서 자라나는 자기 진화형 스킬 트리** — `2026-04-19` [https://github.com/lsdefine/GenericAgent](https://github.com/lsdefine/GenericAgent) #architecture #agent #memory #efficiency #skill-tree
@@ -51,6 +55,8 @@
 * (발행이 완료된 뉴스레터 목록과 발행일자를 기록합니다)
 
 ## 💡 [New Ideas / Spinoffs] 생성된 글로부터 포착된 신규 글감
+* `[security]` **Codex의 computer use는 얼마나 안전한가: 로컬 앱 조작 에이전트의 권한 격리·승인 플로우·감사 로그 설계** ← Codex, 코드 생성기를 넘어 개발 워크스테이션으로 확장 작성 중 포착
+  > 원문이 코드 생성의 병목이 모델이 아니라 운영체제와 앱을 다루는 실행 계층이라고 짚었기 때문에, 그 실행 계층을 실제로 도입할 때의 핵심 후속 질문은 안전하게 어떻게 통제할 것인가입니다.
 * `[architecture]` **LLM 내부 Attention Head 프루닝 실전: ProxySPEX로 MMLU 최적 서브셋 탐색** ← SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크 작성 중 포착
   > 프루닝 적용의 구체적 실전 가이드가 본문에서 부재
 * `[evaluation]` **도메인별 복잡도 보정: 합성 데이터의 난이도 분포가 다운스트림 성능에 미치는 비선형 효과** ← Simula: 합성 데이터 생성을 메커니즘 디자인으로 재구성한 Google의 프레임워크 작성 중 포착
