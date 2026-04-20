@@ -13,7 +13,7 @@ import sys
 from openai import OpenAI
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config import OPENAI_API_KEY, OPENAI_MODEL
+from config import OPENAI_API_KEY, OPENAI_MODEL_LIGHT
 
 # 허용 카테고리 (다양성 가드레일과 공유)
 CATEGORIES = [
@@ -89,10 +89,10 @@ def generate_spinoffs(content: dict, topic: dict, count: int = 3) -> list[dict]:
     print(f"[Spinoff] 파생 주제 {count}개 생성 중...")
 
     response = client.chat.completions.create(
-        model=OPENAI_MODEL,
+        model=OPENAI_MODEL_LIGHT,
+        reasoning_effort="low",
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
-        temperature=0.8,
     )
 
     raw = response.choices[0].message.content.strip()

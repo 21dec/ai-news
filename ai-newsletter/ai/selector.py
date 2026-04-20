@@ -13,7 +13,7 @@ import sys
 from openai import OpenAI
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config import OPENAI_API_KEY, OPENAI_MODEL
+from config import OPENAI_API_KEY, OPENAI_MODEL_LIGHT
 
 
 def _build_history_summary(published_history: list[dict]) -> str:
@@ -124,15 +124,15 @@ URL: {item.get('url', '')}
   "diversity_note": "<발행 이력과의 카테고리 균형에 대한 한 줄 코멘트>"
 }}"""
 
-    print("[AI Selector] GPT-5.4에게 최적 주제 선별 요청 중...")
+    print("[AI Selector] GPT-5.4-mini에게 최적 주제 선별 요청 중...")
     if published_history:
         print(f"  참고 이력: 최근 {len(published_history)}편 | 편중 카테고리: {overused or '없음'}")
 
     response = client.chat.completions.create(
-        model=OPENAI_MODEL,
+        model=OPENAI_MODEL_LIGHT,
+        reasoning_effort="low",
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
-        temperature=0.7,
     )
 
     raw = response.choices[0].message.content.strip()

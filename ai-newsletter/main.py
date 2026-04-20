@@ -126,7 +126,7 @@ def run():
         sys.exit(1)
 
     # ── STEP 3: AI 선별 ──────────────────────────────────────────────────
-    print("\nSTEP 3: GPT-5.4 주제 선별 중...")
+    print("\nSTEP 3: GPT-5.4-mini 주제 선별 중...")
     selected_topic = select_best_topic(candidates, published_history=published_history)
     print(f"\n  선택됨: {selected_topic['title'][:70]}")
     print(f"  카테고리: #{selected_topic.get('category', '?')}")

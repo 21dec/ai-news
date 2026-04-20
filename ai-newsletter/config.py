@@ -6,6 +6,7 @@ import os
 # ─── LLM (OpenAI) ────────────────────────────────────────────────────────────
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 OPENAI_MODEL = "gpt-5.4"
+OPENAI_MODEL_LIGHT = "gpt-5.4-mini"
 
 # ─── Crawling Settings ───────────────────────────────────────────────────────
 MAX_ITEMS_PER_SOURCE = 5       # 소스당 최대 수집 개수

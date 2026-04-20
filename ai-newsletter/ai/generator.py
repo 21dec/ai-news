@@ -109,9 +109,9 @@ flow 타입: "steps" 필드 사용. (모든 텍스트는 영어)"""
 
     response = client.chat.completions.create(
         model=OPENAI_MODEL,
+        reasoning_effort="medium",
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
-        temperature=0.7,
     )
 
     raw = response.choices[0].message.content.strip()

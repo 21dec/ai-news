@@ -19,12 +19,20 @@ from config import OUTPUT_DIR
 # ── 슬러그 ────────────────────────────────────────────────────────────────────
 
 def _slugify(text: str, max_len: int = 40) -> str:
-    """제목을 파일명용 슬러그로 변환 (ASCII only, URL-safe)."""
+    """제목을 파일명용 슬러그로 변환 (ASCII only, URL-safe).
+
+    한국어 등 비-ASCII 제목은 unicodedata.normalize + ASCII 폴백 후에도
+    빈 문자열이 될 수 있으므로, 해시 기반 폴백을 포함합니다.
+    """
+    import hashlib
     text = text.lower()
-    text = text.encode('ascii', errors='ignore').decode('ascii')
-    text = re.sub(r'[^a-z0-9\s-]', '', text)
-    text = re.sub(r'[\s_-]+', '-', text).strip('-')
-    return text[:max_len]
+    ascii_text = text.encode('ascii', errors='ignore').decode('ascii')
+    ascii_text = re.sub(r'[^a-z0-9\s-]', '', ascii_text)
+    ascii_text = re.sub(r'[\s_-]+', '-', ascii_text).strip('-')
+    slug = ascii_text[:max_len]
+    if not slug:
+        slug = hashlib.md5(text.encode()).hexdigest()[:12]
+    return slug
 
 
 # ── 다이어그램 인라인 배치 ────────────────────────────────────────────────────
