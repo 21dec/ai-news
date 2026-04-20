@@ -11,21 +11,17 @@ AI 개발자·엔지니어 대상의 기술 뉴스레터를 **완전 자동화**
 뉴스 수집 → 주제 선별 → 본문 생성 → SVG 다이어그램 → MD/HTML 저장 → 인덱스/네비 갱신 →
 백로그 관리 → GitHub push 까지 하나의 스케줄 실행으로 처리합니다.
 
-## LLM 실행 아키텍처 (중요)
+## LLM 실행 아키텍처
 
-이 시스템은 **Anthropic API 를 직접 호출하지 않습니다.**
-LLM 작업(주제 선별·요약 작성·본문 작성·다이어그램 스펙 결정·스핀오프 생성)은
-`daily-ai-newsletter` 스케줄 태스크가 실행되는 **Claude 세션 내부**에서 직접 수행됩니다.
-Python 코드는 결정적·비-LLM 작업만 담당합니다.
+이 시스템은 **OpenAI GPT-5.4 API**를 사용합니다.
+`uv run python main.py` 로 크롤링부터 발행까지 완전 자동화됩니다.
 
-- **Python 담당**: 크롤링, 파일 저장, MD→HTML 렌더링, SVG 다이어그램 생성,
+- **Python `ai/` 모듈**: OpenAI API 를 호출하여 주제 선별(`selector.py`),
+  본문 생성(`generator.py`), 스핀오프 추출(`spinoff.py`)을 수행합니다.
+- **Python 인프라**: 크롤링, 파일 저장, MD→HTML 렌더링, PNG 다이어그램 생성,
   5섹션 포맷 검증, 톤 검증, 인덱스/네비 빌드, 백로그 파일 I/O.
-- **Claude 세션 담당**: 후보 선별, 본문·요약 작성, diagram_specs 설계,
-  스핀오프 3개 추출 및 백로그 append.
-- `ai/` 디렉터리는 과거 Anthropic API 경로를 보관하는 **레거시**입니다.
-  `anthropic` 패키지는 의존성에서 제거되었으며, `ai/__init__.py` 는 ImportError 를
-  try/except 로 흡수해 스텁으로 대체합니다. 실제 호출되면 RuntimeError 로 실패합니다.
-- `main.py` 도 레거시 reference 입니다. 운영 흐름은 스케줄 태스크 프롬프트를 따릅니다.
+- **환경변수**: `OPENAI_API_KEY` 필수 (`.env` 파일 또는 환경변수로 설정).
+- **엔트리포인트**: `main.py` — 8단계 파이프라인을 순차 실행합니다.
 
 ---
 
@@ -33,14 +29,14 @@ Python 코드는 결정적·비-LLM 작업만 담당합니다.
 
 | 파일 | 역할 | 수정 시 주의사항 |
 |------|------|----------------|
-| `main.py` | ⚠️ 레거시 참조용 — 운영에서 호출하지 않음 | 스케줄 태스크 프롬프트가 실제 오케스트레이터 |
-| `config.py` | 전역 설정 상수 | `ANTHROPIC_API_KEY` / `CLAUDE_MODEL` 은 deprecated 필드 |
+| `main.py` | 운영 엔트리포인트 (`uv run python main.py`) | 8단계 파이프라인 순차 실행 |
+| `config.py` | 전역 설정 상수 | `OPENAI_API_KEY` / `OPENAI_MODEL` |
 | `crawlers/github_trending.py` | GitHub AI 레포 스크래핑 | BeautifulSoup4 사용, CSS 셀렉터 변경 주의 |
 | `crawlers/arxiv.py` | ArXiv XML API 파싱 | 표준 라이브러리(urllib, xml.etree)만 사용 |
 | `crawlers/reddit.py` | Reddit JSON API | 인증 불필요, User-Agent 필수 |
-| `ai/selector.py` | ⚠️ 레거시 (API 경로) | 사용하지 않음. Claude 세션이 선별 수행 |
-| `ai/generator.py` | ⚠️ 레거시 (API 경로) | 사용하지 않음. Claude 세션이 본문 작성 |
-| `ai/spinoff.py` | ⚠️ 레거시 (API 경로) | 사용하지 않음. Claude 세션이 스핀오프 작성 |
+| `ai/selector.py` | GPT-5.4 주제 선별 | 다양성 가드레일 포함 |
+| `ai/generator.py` | GPT-5.4 본문 생성 | CO-STAR 톤·포맷 강제, 재시도 로직 |
+| `ai/spinoff.py` | GPT-5.4 스핀오프 추출 | 적응형 cap 연동 |
 | `diagrams/generator.py` | SVG 인포그래픽 생성 | `comparison` / `flow` 두 타입 지원 |
 | `output/writer.py` | MD + HTML 저장, `_slugify()` | HTML 은 외부 `../style.css` 참조 (인라인 `<style>` 없음) |
 | `output/index_builder.py` | `outputs/index.html` 생성 + prev/next 네비 주입 | 이슈 폴더 스캔은 `YYYY-MM-DD-slug` 정규식 기반 |

@@ -3,13 +3,9 @@ Configuration for AI Newsletter Automation System
 """
 import os
 
-# ─── LLM 경로 ────────────────────────────────────────────────────────────────
-# 이 시스템은 Anthropic API 를 직접 호출하지 않습니다.
-# 주제 선별·본문 생성·스핀오프 등 LLM 작업은 Claude 스케줄 태스크 세션이
-# 직접 수행합니다. 아래 상수는 레거시 ai/ 모듈 호환용으로만 남겨 두며,
-# 파이프라인 실행 경로에서는 참조되지 않습니다.
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")   # deprecated
-CLAUDE_MODEL = "claude-opus-4-6"                              # deprecated
+# ─── LLM (OpenAI) ────────────────────────────────────────────────────────────
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_MODEL = "gpt-5.4"
 
 # ─── Crawling Settings ───────────────────────────────────────────────────────
 MAX_ITEMS_PER_SOURCE = 5       # 소스당 최대 수집 개수

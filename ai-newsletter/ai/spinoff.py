@@ -1,18 +1,19 @@
 """
 Spinoff Idea Generator
-발행된 뉴스레터에서 파생 주제 2~3개를 자동으로 추출합니다.
+발행된 뉴스레터에서 파생 주제를 자동으로 추출합니다.
 
 동작 원리:
-- 발행된 글의 제목/요약/본문을 Claude에게 전달
+- 발행된 글의 제목/요약/본문을 GPT-5.4에게 전달
 - "이 글을 읽은 AI 엔지니어가 자연스럽게 궁금해할 후속 주제"를 추출
 - 카테고리 태그와 함께 백로그용 포맷으로 반환
 """
 import json
-import anthropic
-import sys
 import os
+import sys
+from openai import OpenAI
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+from config import OPENAI_API_KEY, OPENAI_MODEL
 
 # 허용 카테고리 (다양성 가드레일과 공유)
 CATEGORIES = [
@@ -36,23 +37,12 @@ def generate_spinoffs(content: dict, topic: dict, count: int = 3) -> list[dict]:
     Args:
         content: generate_newsletter()의 결과 (title, summary, article, tags)
         topic: 원본 선택 주제 (source, url 등)
-        count: 생성할 스핀오프 개수 (기본 3개)
+        count: 생성할 스핀오프 개수
 
     Returns:
-        List of dicts:
-        [
-            {
-                "title": "스핀오프 주제 제목 (한국어)",
-                "description": "왜 이 주제가 중요한지 한 줄 설명",
-                "category": "infra | framework | agent | ...",
-                "tags": ["tag1", "tag2"],
-                "source_article": "원본 뉴스레터 제목",
-                "rationale": "이 글에서 어떤 흐름으로 파생됐는지"
-            },
-            ...
-        ]
+        List of dicts with title, description, category, tags, source_article, rationale
     """
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    client = OpenAI(api_key=OPENAI_API_KEY)
 
     article_title = content.get("title", topic.get("title", ""))
     article_summary = content.get("summary", "")
@@ -98,20 +88,17 @@ def generate_spinoffs(content: dict, topic: dict, count: int = 3) -> list[dict]:
 
     print(f"[Spinoff] 파생 주제 {count}개 생성 중...")
 
-    message = client.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=1500,
-        messages=[{"role": "user", "content": prompt}]
+    response = client.chat.completions.create(
+        model=OPENAI_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+        temperature=0.8,
     )
 
-    raw = message.content[0].text.strip()
+    raw = response.choices[0].message.content.strip()
 
     try:
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        result = json.loads(raw.strip())
+        result = json.loads(raw)
         spinoffs = result.get("spinoffs", [])
     except json.JSONDecodeError as e:
         print(f"[Spinoff] JSON 파싱 실패: {e}")

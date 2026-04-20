@@ -3,16 +3,17 @@ AI Topic Selector
 수집된 뉴스 후보들 중에서 CO-STAR 기준으로 가장 실용적인 주제 1개를 선별합니다.
 
 다양성 가드레일:
-- 최근 발행 이력(published_history)을 Claude에게 전달
+- 최근 발행 이력(published_history)을 LLM에게 전달
 - 최근 N편에서 자주 쓰인 카테고리는 낮은 우선순위 부여
 - 같은 기술/도구의 반복 선택 방지
 """
 import json
-import anthropic
-import sys
 import os
+import sys
+from openai import OpenAI
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+from config import OPENAI_API_KEY, OPENAI_MODEL
 
 
 def _build_history_summary(published_history: list[dict]) -> str:
@@ -21,7 +22,7 @@ def _build_history_summary(published_history: list[dict]) -> str:
         return "없음 (첫 번째 발행)"
 
     lines = []
-    for i, item in enumerate(published_history[:8], 1):  # 최근 8편까지만
+    for i, item in enumerate(published_history[:8], 1):
         date = item.get("date", "")
         title = item.get("title", "")
         tags = ", ".join(f"#{t}" for t in item.get("tags", []))
@@ -44,11 +45,11 @@ def select_best_topic(
     published_history: list[dict] = None
 ) -> dict:
     """
-    Claude API를 사용해 후보 목록에서 가장 뉴스레터에 적합한 주제를 선별합니다.
+    OpenAI API를 사용해 후보 목록에서 가장 뉴스레터에 적합한 주제를 선별합니다.
 
     Args:
         candidates: 크롤러에서 수집한 아이템 리스트
-        published_history: 다양성 가드레일용 발행 이력 (load_published_history() 결과)
+        published_history: 다양성 가드레일용 발행 이력
 
     Returns:
         선택된 아이템 dict (원본 + selection_reason, pain_point, hook, category 키 추가)
@@ -57,7 +58,7 @@ def select_best_topic(
         raise ValueError("후보 목록이 비어 있습니다.")
 
     published_history = published_history or []
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    client = OpenAI(api_key=OPENAI_API_KEY)
 
     # 후보 목록 포맷
     candidate_text = ""
@@ -113,34 +114,31 @@ URL: {item.get('url', '')}
 {candidate_text}
 
 ---
-아래 JSON 형식으로만 응답하세요 (다른 텍스트 없이):
+아래 JSON 형식으로만 응답하세요:
 {{
   "selected_index": <1부터 시작하는 번호>,
   "category": "<infra|framework|agent|rag|training|evaluation|multimodal|tooling|architecture|security 중 하나>",
-  "selection_reason": "<선택 이유 2-3문장. 왜 지금 이것이 가장 실용적이고, 발행 이력과도 균형이 맞는가>",
+  "selection_reason": "<선택 이유 2-3문장>",
   "pain_point": "<이 기술이 해결하는 구체적인 개발자 Pain Point>",
-  "hook": "<뉴스레터 독자의 주목을 끄는 한 줄 훅 문장 (한국어). 어미는 '~입니다/~합니다' 또는 명사형만 사용하고, 과장 수식어(놀랍게도·혁신적인·드디어 등)와 느낌표·이모지는 사용하지 않습니다>",
+  "hook": "<뉴스레터 독자의 주목을 끄는 한 줄 훅 문장 (한국어). 어미는 '~입니다/~합니다' 또는 명사형만 사용하고, 과장 수식어와 느낌표·이모지는 사용하지 않습니다>",
   "diversity_note": "<발행 이력과의 카테고리 균형에 대한 한 줄 코멘트>"
 }}"""
 
-    print("[AI Selector] Claude에게 최적 주제 선별 요청 중...")
+    print("[AI Selector] GPT-5.4에게 최적 주제 선별 요청 중...")
     if published_history:
         print(f"  참고 이력: 최근 {len(published_history)}편 | 편중 카테고리: {overused or '없음'}")
 
-    message = client.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=1024,
-        messages=[{"role": "user", "content": prompt}]
+    response = client.chat.completions.create(
+        model=OPENAI_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+        temperature=0.7,
     )
 
-    raw = message.content[0].text.strip()
+    raw = response.choices[0].message.content.strip()
 
     try:
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        result = json.loads(raw.strip())
+        result = json.loads(raw)
     except json.JSONDecodeError as e:
         print(f"[AI Selector] JSON 파싱 실패: {e}\n응답: {raw}")
         return {**candidates[0], "selection_reason": "자동 선택 (파싱 실패)",

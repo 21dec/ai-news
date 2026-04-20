@@ -3,15 +3,16 @@ Newsletter Content Generator
 CO-STAR 프레임워크를 기반으로 뉴스레터 콘텐츠를 생성합니다.
 - 요약글 (Summary): 400자 내외
 - 딥다이브 글 (Detailed Article): 1000~3000자
-- 다이어그램 스펙 (JSON): 다이어그램 생성 모듈에 전달
+- 다이어그램 스펙 (JSON): 필요한 경우에만 포함
 """
 import json
-import anthropic
-import sys
 import os
+import sys
+from openai import OpenAI
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from config import (
-    ANTHROPIC_API_KEY, CLAUDE_MODEL,
+    OPENAI_API_KEY, OPENAI_MODEL,
     SUMMARY_LENGTH, ARTICLE_MIN_LENGTH, ARTICLE_MAX_LENGTH
 )
 
@@ -29,11 +30,11 @@ def generate_newsletter(topic: dict, retry_hint: list[str] | None = None) -> dic
             "title": str,
             "summary": str,          # 400자 내외 요약
             "article": str,          # 1000~3000자 딥다이브
-            "diagram_specs": list,   # 다이어그램 생성 스펙 (1~3개)
+            "diagram_specs": list,   # 다이어그램 생성 스펙 (0~3개, 필요 시에만)
             "tags": list[str],       # 관련 태그
         }
     """
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    client = OpenAI(api_key=OPENAI_API_KEY)
 
     title = topic.get("title", "")
     url = topic.get("url", "")
@@ -97,41 +98,28 @@ def generate_newsletter(topic: dict, retry_hint: list[str] | None = None) -> dic
   "title": "<뉴스레터 제목 (한국어, 임팩트 있게)>",
   "summary": "<요약글 400자 내외. 핵심 가치와 Why Now를 담아 독자가 더 읽고 싶게 만드는 글>",
   "article": "<딥다이브 글 1000~3000자. 마크다운 형식 사용 가능. ## 소제목으로 구조화. 아키텍처 비교, 코드 스니펫 포함 권장>",
-  "diagram_specs": [
-    {{
-      "type": "comparison",
-      "title": "<다이어그램 제목 (영어)>",
-      "description": "<다이어그램이 보여줄 내용 설명>",
-      "left_label": "<기존 방식 레이블 (영어)>",
-      "right_label": "<새로운 방식 레이블 (영어)>",
-      "left_items": ["<기존 방식 특징1>", "<기존 방식 특징2>", "<기존 방식 특징3>"],
-      "right_items": ["<새 방식 특징1>", "<새 방식 특징2>", "<새 방식 특징3>"]
-    }}
-  ],
+  "diagram_specs": [],
   "tags": ["<태그1>", "<태그2>", "<태그3>", "<태그4>"]
 }}
 
-diagram_specs는 1~3개 포함하세요. type은 "comparison" (기존 vs 신규 비교) 또는 "flow" (워크플로우) 중 선택.
-flow 타입이면 "steps": ["<단계1>", "<단계2>", ...] 필드를 사용하세요."""
+diagram_specs는 시각화가 이해에 크게 도움될 때만 포함하세요 (비교 아키텍처, 워크플로우 등). 불필요하면 빈 배열로 두세요.
+type은 "comparison" (기존 vs 신규 비교) 또는 "flow" (워크플로우) 중 선택.
+comparison 타입: "left_label", "right_label", "left_items", "right_items" 필드 사용. (모든 텍스트는 영어)
+flow 타입: "steps" 필드 사용. (모든 텍스트는 영어)"""
 
-    message = client.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}]
+    response = client.chat.completions.create(
+        model=OPENAI_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+        temperature=0.7,
     )
 
-    raw = message.content[0].text.strip()
+    raw = response.choices[0].message.content.strip()
 
-    # JSON 파싱
     try:
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        content = json.loads(raw.strip())
+        content = json.loads(raw)
     except json.JSONDecodeError as e:
         print(f"[Generator] JSON 파싱 실패: {e}")
-        # 폴백 — 검증 단계에서 길이 부족으로 재시도 트리거됨
         content = {
             "title": title,
             "summary": description[:400],
