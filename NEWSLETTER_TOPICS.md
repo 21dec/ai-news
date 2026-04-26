@@ -45,6 +45,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **AI 제품 운영 데이터를 한 스택으로 묶는 방법, PostHog** — `2026-04-26` [https://github.com/PostHog/posthog](https://github.com/PostHog/posthog) #tooling #Feature Flags #AI Analytics #Observability #Product Analytics
 * **합성 데이터의 핵심은 생성량이 아니라 메커니즘 설계입니다** — `2026-04-20` [https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/](https://research.google/blog/designing-synthetic-datasets-for-the-real-world-mechanism-design-and-reasoning-from-first-principles/) #GoogleResearch #LLM #training #DataEngineering #SyntheticData
 * **Codex, 코드 생성기를 넘어 개발 워크스테이션으로 확장** — `2026-04-20` [https://openai.com/index/codex-for-almost-everything](https://openai.com/index/codex-for-almost-everything) #AI에이전트 #Codex #DeveloperTools #tooling #OpenAI
 * **SPEX: 수천 개 피처에서 LLM의 상호작용을 찾아내는 희소 복원 기반 해석 프레임워크** — `2026-04-19` [http://bair.berkeley.edu/blog/2026/03/13/spex/](http://bair.berkeley.edu/blog/2026/03/13/spex/) #evaluation #interpretability #interaction #spex
