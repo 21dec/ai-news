@@ -45,6 +45,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **클라우드 TTS를 기기 안으로 옮기는 선택지, Neuphonic의 neutts** — `2026-04-30` [https://github.com/neuphonic/neutts](https://github.com/neuphonic/neutts) #온디바이스AI #GitHubTrending #TTS #multimodal #엣지추론
 * **초 단위 AI 전력 추정, 스케줄러가 기다리지 않는 이유** — `2026-04-28` [https://news.mit.edu/2026/faster-way-to-estimate-ai-power-consumption-0427](https://news.mit.edu/2026/faster-way-to-estimate-ai-power-consumption-0427) #전력최적화 #데이터센터 #AI인프라 #스케줄링 #infra
 * **LLM이 모르면 멈추게 하는 법, MIT의 신뢰도 캘리브레이션 접근** — `2026-04-27` [https://news.mit.edu/2026/teaching-ai-models-to-say-im-not-sure-0422](https://news.mit.edu/2026/teaching-ai-models-to-say-im-not-sure-0422) #LLM #AI Reliability #Calibration #Hallucination #evaluation
 * **AI 제품 운영 데이터를 한 스택으로 묶는 방법, PostHog** — `2026-04-26` [https://github.com/PostHog/posthog](https://github.com/PostHog/posthog) #tooling #Feature Flags #AI Analytics #Observability #Product Analytics
