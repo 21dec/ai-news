@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1370" height="160" viewBox="0 0 1370 160" font-family="Inter, Arial, sans-serif">
+<defs>
+  <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#D75656"/>
+  </marker>
+</defs>
+<rect width="1370" height="160" fill="#FFFFFF" rx="12"/>
+<text x="685" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#222222">Workflow</text>
+<rect x="20" y="55" width="140" height="60" fill="#D75656" rx="6" />
+<text x="30" y="71" font-size="10" font-weight="700" fill="#F0A0A0">STEP 1</text>
+<text x="90" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">Receive user</text>
+<text x="90" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">request</text>
+<line x1="165" y1="85" x2="185" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="190" y="55" width="140" height="60" fill="#EEEEEE" rx="6" stroke="#D75656" stroke-width="2"/>
+<text x="200" y="71" font-size="10" font-weight="700" fill="#D75656">STEP 2</text>
+<text x="260" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">Classify data and</text>
+<text x="260" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">intent</text>
+<line x1="335" y1="85" x2="355" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="360" y="55" width="140" height="60" fill="#D75656" rx="6" />
+<text x="370" y="71" font-size="10" font-weight="700" fill="#F0A0A0">STEP 3</text>
+<text x="430" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">Assemble minimal</text>
+<text x="430" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">prompt context</text>
+<line x1="505" y1="85" x2="525" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="530" y="55" width="140" height="60" fill="#EEEEEE" rx="6" stroke="#D75656" stroke-width="2"/>
+<text x="540" y="71" font-size="10" font-weight="700" fill="#D75656">STEP 4</text>
+<text x="600" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">Evaluate policy</text>
+<text x="600" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">for tool access</text>
+<line x1="675" y1="85" x2="695" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="700" y="55" width="140" height="60" fill="#D75656" rx="6" />
+<text x="710" y="71" font-size="10" font-weight="700" fill="#F0A0A0">STEP 5</text>
+<text x="770" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">Issue short-lived</text>
+<text x="770" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">scoped credential</text>
+<line x1="845" y1="85" x2="865" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="870" y="55" width="140" height="60" fill="#EEEEEE" rx="6" stroke="#D75656" stroke-width="2"/>
+<text x="880" y="71" font-size="10" font-weight="700" fill="#D75656">STEP 6</text>
+<text x="940" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">Execute approved</text>
+<text x="940" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">tool call</text>
+<line x1="1015" y1="85" x2="1035" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="1040" y="55" width="140" height="60" fill="#D75656" rx="6" />
+<text x="1050" y="71" font-size="10" font-weight="700" fill="#F0A0A0">STEP 7</text>
+<text x="1110" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">Scan output and</text>
+<text x="1110" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">log lineage</text>
+<line x1="1185" y1="85" x2="1205" y2="85" stroke="#D75656" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="1210" y="55" width="140" height="60" fill="#EEEEEE" rx="6" stroke="#D75656" stroke-width="2"/>
+<text x="1220" y="71" font-size="10" font-weight="700" fill="#D75656">STEP 8</text>
+<text x="1280" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#222222">Return response</text>
+</svg>
