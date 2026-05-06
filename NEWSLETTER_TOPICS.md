@@ -45,6 +45,7 @@
 * (현재 작성 중인 글감이 이곳에 위치합니다)
 
 ## ✅ [Published] 발행 완료
+* **탭ুল러 ML의 기본값 재정의, PriorLabs TabPFN** — `2026-05-06` [https://github.com/PriorLabs/TabPFN](https://github.com/PriorLabs/TabPFN) #GitHubTrending #training #TabPFN #FoundationModel #TabularML
 * **AI가 공격면이 되는 순간, 보안 경계는 사라집니다** — `2026-05-05` [https://www.technologyreview.com/2026/05/01/1136779/cyber-insecurity-in-the-ai-era/](https://www.technologyreview.com/2026/05/01/1136779/cyber-insecurity-in-the-ai-era/) #LLM #AI보안 #security #에이전트 #제로트러스트
 * **Rapid-MLX: Apple Silicon 로컬 LLM을 OpenAI 대체 경로로 묶는 엔진** — `2026-05-05` [https://github.com/raullenchai/Rapid-MLX](https://github.com/raullenchai/Rapid-MLX) #ToolCalling #LocalLLM #OpenAI호환 #AppleSilicon #tooling
 * **클라우드 TTS를 기기 안으로 옮기는 선택지, Neuphonic의 neutts** — `2026-04-30` [https://github.com/neuphonic/neutts](https://github.com/neuphonic/neutts) #온디바이스AI #GitHubTrending #TTS #multimodal #엣지추론
